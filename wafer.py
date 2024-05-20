@@ -137,14 +137,14 @@ class WAFBypass():
 
             for attr in GlobalAttributes:
                 encoded = urlencode({self.param: f"{attr}"})
-                url = f"{self.url.scheme}://{self.url.netloc}/?{encoded}"
+                url = f"{self.url.scheme}://{self.url.netloc}{self.url.path}?{encoded}"
                 is403, _ = self.navigate(self.driver, url)
                 if not is403:
                     self.unfiltered_attributes["global"].append(attr)
 
             for attr in EventsAttributes:
                 encoded = urlencode({self.param: f"{attr}"})
-                url = f"{self.url.scheme}://{self.url.netloc}/?{encoded}"
+                url = f"{self.url.scheme}://{self.url.netloc}{self.url.path}?{encoded}"
                 is403, _ = self.navigate(self.driver, url)
                 if not is403:
                     self.unfiltered_attributes["events"].append(attr)
@@ -156,7 +156,7 @@ class WAFBypass():
                     for attr in TagSpecificAttributes[tag.name]:
                         encoded = urlencode(
                             {self.param: f"<{tag.name} {attr}/>"})
-                        url = f"{self.url.scheme}://{self.url.netloc}/?{encoded}"
+                        url = f"{self.url.scheme}://{self.url.netloc}{self.url.path}?{encoded}"
                         is403, _ = self.navigate(self.driver, url)
                         if not is403:
                             self.unfiltered_attributes["tag_specific"][tag.name].append(
@@ -170,7 +170,7 @@ class WAFBypass():
         try:
             for tag in Tags:
                 encoded = urlencode({self.param: f"{tag}"})
-                url = f"{self.url.scheme}://{self.url.netloc}/?{encoded}"
+                url = f"{self.url.scheme}://{self.url.netloc}{self.url.path}?{encoded}"
                 is403, _ = self.navigate(self.driver, url)
                 if not is403:
                     self.unfiltered_tags.append(tag)
@@ -257,7 +257,7 @@ class WAFBypass():
             if not element:
                 break
             encoded = urlencode({self.param: f"{element}"})
-            url = f"{self.url.scheme}://{self.url.netloc}/?{encoded}"
+            url = f"{self.url.scheme}://{self.url.netloc}{self.url.path}?{encoded}"
             is403, triggered = self.navigate(driver, url)
 
         # close window
@@ -315,7 +315,7 @@ class WAFBypass():
                 self.populate_ids_names(tags)
                 payload = TagList(tags)
                 encoded = urlencode({self.param: f"{payload}"})
-                url = f"{self.url.scheme}://{self.url.netloc}/?{encoded}"
+                url = f"{self.url.scheme}://{self.url.netloc}{self.url.path}?{encoded}"
                 is403, triggered = self.navigate(self.driver, url)
                 if triggered:
                     print(f"XSS Payload: {payload}")
